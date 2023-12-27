@@ -78,7 +78,7 @@ public class RegisterActivity extends JFrame {
         // JDBC connection parameters
         String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/LibrarySystem";
         String dbUser = "Topguy";
-        String dbPassword = "qataraiR22";
+        String dbPassword = "0000";
 
         try {
             // Load the JDBC driver
@@ -133,14 +133,6 @@ public class RegisterActivity extends JFrame {
             return count > 0;
         }
     }
-
-   /* private void openMainActivity() {
-
-        MainActivity main = new MainActivity();
-        main.setVisible(true);
-        this.dispose();
-    }*/
-
     private void openLoginActivity() {
          LoginActivity login = new LoginActivity();
          login.setVisible(true);

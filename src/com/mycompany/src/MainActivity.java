@@ -30,7 +30,8 @@ public class MainActivity extends JFrame {
     private String cFirstName;
     private String cLastName;
     private String cEmail;
-    private String cAddress;
+    public  static String cAddress;
+    public static String cPhoneNumber;
 
     public MainActivity() {
         setTitle("Library Buying Interface");
@@ -79,7 +80,7 @@ public class MainActivity extends JFrame {
 
         String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/LibrarySystem";
         String dbUsername = "Topguy";
-        String dbPassword = "qataraiR22";
+        String dbPassword = "0000";
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
             String query = "SELECT bookName, authorId, bookPrice FROM books";
@@ -102,12 +103,12 @@ public class MainActivity extends JFrame {
         return books;
     }
 
-    private void retrieveCustomerInfoFromDatabase() {
+    public void retrieveCustomerInfoFromDatabase() {
         String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/LibrarySystem";
         String dbUsername = "Topguy";
-        String dbPassword = "qataraiR22";
+        String dbPassword = "0000";
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
-            String query = "SELECT cFirstName, cLastName, cEmail, cAddress FROM customers WHERE cId = ?";
+            String query = "SELECT cFirstName, cLastName, cEmail, cAddress, cPhoneNumber FROM customers WHERE cId = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setInt(1, customerId);
                 ResultSet resultSet = preparedStatement.executeQuery();
@@ -117,7 +118,9 @@ public class MainActivity extends JFrame {
                     cFirstName = resultSet.getString("cFirstName");
                     cLastName = resultSet.getString("cLastName");
                     cEmail = resultSet.getString("cEmail");
+                    cPhoneNumber = resultSet.getString("cPhoneNumber");
                     cAddress = resultSet.getString("cAddress");
+
                 }
             }
         } catch (SQLException e) {
@@ -256,15 +259,17 @@ class ShoppingCart extends JPanel {
         // Insert order details into the orders table
         String jdbcUrl = "jdbc:mysql://127.0.0.1:3306/LibrarySystem";
         String dbUsername = "Topguy";
-        String dbPassword = "qataraiR22";
+        String dbPassword = "0000";
 
         try (Connection connection = DriverManager.getConnection(jdbcUrl, dbUsername, dbPassword)) {
-            String insertOrderQuery = "INSERT INTO orders (customerId, orderDate, totalCost ,booksOrdered) VALUES (?, CURRENT_DATE, ? , ?)";
+            String insertOrderQuery = "INSERT INTO orders (customerId, orderDate, totalCost ,booksOrdered ,cPhoneNumber ,cAddress) VALUES (?, CURRENT_DATE, ? , ? , ? , ? )";
             try (PreparedStatement insertOrderStatement = connection.prepareStatement(insertOrderQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 insertOrderStatement.setInt(1, MainActivity.customerId);
                 insertOrderStatement.setDouble(2, calculateTotalCost());
                 String booksOrdered = getBooksOrderedString(cart);
                 insertOrderStatement.setString(3, booksOrdered);
+                insertOrderStatement.setString(4, MainActivity.cPhoneNumber);
+                insertOrderStatement.setString(5, MainActivity.cAddress);
                 // Execute the insert statement
                 int rowsAffected = insertOrderStatement.executeUpdate();
 
